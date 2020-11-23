@@ -1,8 +1,8 @@
 DROP DATABASE IF EXISTS `ftjv19`;
 CREATE DATABASE IF NOT EXISTS `ftjv19`;
 USE `ftjv19`;
-CREATE TABLE IF NOT EXISTS `people`(
-	`first_name` VARCHAR(255) ,
+CREATE TABLE IF NOT EXISTS `people` (
+    `first_name` VARCHAR(255),
     `last_name` VARCHAR(255),
     `address` VARCHAR(255),
     `city` VARCHAR(255),

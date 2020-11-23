@@ -1,7 +1,11 @@
 USE `ftjv19`;
 
-DELETE FROM `people` where `age` = 65;
+DELETE FROM `people` 
+WHERE
+    `age` = 65;
 
-DELETE FROM `people` where 65;
+DELETE FROM `people` 
+WHERE
+    65;
 
-DELETE  FROM `people`;
+DELETE FROM `people`;
