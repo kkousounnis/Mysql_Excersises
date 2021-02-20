@@ -1,25 +1,38 @@
 USE `classicmodels`;
-CREATE TABLE `employees_audit` (
+DROP TABLE IF EXISTS `WorkCenters`;
+
+CREATE TABLE `WorkCenters` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `employeeNumber` INT NOT NULL,
-    `lastname` VARCHAR(50) NOT NULL,
-    `changedat` DATETIME DEFAULT NULL,
-    action VARCHAR(50) DEFAULT NULL
+    `name` VARCHAR(100) NOT NULL,
+    `capacity` INT NOT NULL
 );
-USE `classicmodels`;
-CREATE 
-    TRIGGER  `before_employee_update`
- BEFORE UPDATE ON `employees` FOR EACH ROW 
-    INSERT INTO `employees_audit` 
-    SET ACTION = 'update' ,
-		`employeeNumber` = OLD.`employeeNumber`,
-        `lastname` = OLD.`lastname` ,
-        `changedat` = NOW();
-SHOW TRIGGERS;
+DROP TABLE IF EXISTS WorkCenterStats;
+
+CREATE TABLE WorkCenterStats(
+    `totalCapacity` INT NOT NULL
+);
 
 USE `classicmodels`;
-UPDATE employees 
-SET 
-    lastName = 'Phan'
-WHERE
-    employeeNumber = 1056;
+DELIMITER $$
+
+CREATE TRIGGER `before_workcenters_insert`
+BEFORE INSERT ON `WorkCenters` FOR EACH ROW 
+BEGIN
+	DECLARE rowcount INT;
+    
+    SELECT COUNT(*)
+    INTO rowcount
+    FROM `WorkCentersStats`;
+    
+    IF rowcount > 0 THEN 
+		UPDATE `WorkCentersStats`
+        SET `totalCapacity` = `totalCapacity` + new.Capacity;
+	ELSE
+		INSERT INTO `WorkCentersStats`(`totalCapacity`)
+        VALUES(new.`capacity`);
+	END IF;
+END $$
+
+USE `classicmodels`;
+INSERT INTO `WorkCenters`(`name`, `capacity`)
+VALUES('Mold Machine',130);
